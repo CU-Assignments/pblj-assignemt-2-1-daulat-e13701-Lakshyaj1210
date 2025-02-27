@@ -1,0 +1,48 @@
+import java.util.*;
+
+public class CardCollection {
+    static HashMap<String, ArrayList<String>> cardDeck = new HashMap<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void addCard() {
+        System.out.print("Enter Card Symbol (e.g., Hearts, Spades): ");
+        String symbol = sc.next();
+        System.out.print("Enter Card Name (e.g., Ace, King): ");
+        String card = sc.next();
+
+        cardDeck.putIfAbsent(symbol, new ArrayList<>());
+        cardDeck.get(symbol).add(card);
+        System.out.println("Card added successfully.");
+    }
+
+    public static void findCardsBySymbol() {
+        System.out.print("Enter Symbol to Search (e.g., Hearts, Spades): ");
+        String symbol = sc.next();
+        if (cardDeck.containsKey(symbol)) {
+            System.out.println("Cards in " + symbol + ": " + cardDeck.get(symbol));
+        } else {
+            System.out.println("No cards found for this symbol.");
+        }
+    }
+
+    public static void displayAllCards() {
+        for (Map.Entry<String, ArrayList<String>> entry : cardDeck.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\n1. Add Card\n2. Find Cards by Symbol\n3. Display All Cards\n4. Exit");
+            System.out.print("Choose an option: ");
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1: addCard(); break;
+                case 2: findCardsBySymbol(); break;
+                case 3: displayAllCards(); break;
+                case 4: System.exit(0);
+                default: System.out.println("Invalid choice.");
+            }
+        }
+    }
+}

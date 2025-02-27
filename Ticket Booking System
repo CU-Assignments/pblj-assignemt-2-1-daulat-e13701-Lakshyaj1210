@@ -1,0 +1,51 @@
+import java.util.concurrent.locks.ReentrantLock;
+
+class TicketBookingSystem {
+    private static int availableSeats = 10;
+    private static final ReentrantLock lock = new ReentrantLock();
+
+    public static void bookTicket(String user, int seats) {
+        lock.lock();
+        try {
+            if (seats <= availableSeats) {
+                System.out.println(user + " successfully booked " + seats + " seat(s).");
+                availableSeats -= seats;
+            } else {
+                System.out.println(user + " booking failed. Not enough seats available.");
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+class BookingThread extends Thread {
+    private String user;
+    private int seats;
+
+    BookingThread(String user, int seats, int priority) {
+        this.user = user;
+        this.seats = seats;
+        setPriority(priority);
+    }
+
+    public void run() {
+        TicketBookingSystem.bookTicket(user, seats);
+    }
+}
+
+public class TicketBookingMain {
+    public static void main(String[] args) {
+        BookingThread vip1 = new BookingThread("VIP User 1", 2, Thread.MAX_PRIORITY);
+        BookingThread vip2 = new BookingThread("VIP User 2", 3, Thread.MAX_PRIORITY);
+        BookingThread user1 = new BookingThread("User 1", 4, Thread.NORM_PRIORITY);
+        BookingThread user2 = new BookingThread("User 2", 2, Thread.MIN_PRIORITY);
+        BookingThread user3 = new BookingThread("User 3", 1, Thread.MIN_PRIORITY);
+
+        vip1.start();
+        vip2.start();
+        user1.start();
+        user2.start();
+        user3.start();
+    }
+}
